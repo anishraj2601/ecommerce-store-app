@@ -4,7 +4,7 @@ import { ProductService } from "./product.service";
 import { CartService } from "./cart.service";
 import { createError } from "../middlewares/error.middleware";
 import type { CreateOrderDTO } from "../types";
-import { prisma } from "../../../prisma";
+import { prisma } from "../prisma";
 
 export class OrderService {
   private orderRepository: OrderRepository;
@@ -83,21 +83,28 @@ export class OrderService {
       const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 11).toUpperCase()}`;
 
       // 1. Create order
-      const createdOrder = await this.orderRepository.create({
-        userId,
-        orderNumber,
-        subtotal,
-        tax,
-        shipping,
-        total,
-        shippingAddress,
-        billingAddress: billingAddress || shippingAddress,
-        items: orderItems,
-      }, tx); // Pass transaction client to repository method
+      const createdOrder = await this.orderRepository.create(
+        {
+          userId,
+          orderNumber,
+          subtotal,
+          tax,
+          shipping,
+          total,
+          shippingAddress,
+          billingAddress: billingAddress || shippingAddress,
+          items: orderItems,
+        },
+        tx
+      ); // Pass transaction client to repository method
 
       // 2. Update product inventory
       for (const item of items) {
-        await this.orderRepository.updateProductInventory(item.productId, item.quantity, tx);
+        await this.orderRepository.updateProductInventory(
+          item.productId,
+          item.quantity,
+          tx
+        );
       }
 
       // 3. Clear user's cart

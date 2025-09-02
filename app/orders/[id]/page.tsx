@@ -195,10 +195,10 @@ export default function OrderConfirmationPage() {
                             {item.productTitle || item.product.title}
                           </Link>
                           <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                          <p className="text-sm font-medium">${item.priceSnapshot.toFixed(2)} each</p>
+                          <p className="text-sm font-medium">${item.priceSnapshot} each</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">${(item.priceSnapshot * item.quantity).toFixed(2)}</p>
+                          <p className="font-medium">${(item.priceSnapshot * item.quantity)}</p>
                         </div>
                       </div>
                     ))}
@@ -241,20 +241,20 @@ export default function OrderConfirmationPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Subtotal</span>
-                      <span>${order.subtotal.toFixed(2)}</span>
+                      <span>${order.subtotal}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>Shipping</span>
-                      <span>{order.shipping === 0 ? "Free" : `$${order.shipping.toFixed(2)}`}</span>
+                      <span>{order.shipping === 0 ? "Free" : `$${order.shipping}`}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>Tax</span>
-                      <span>${order.tax.toFixed(2)}</span>
+                      <span>${order.tax}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-semibold text-lg">
                       <span>Total</span>
-                      <span>${order.total.toFixed(2)}</span>
+                      <span>${order.total}</span>
                     </div>
                   </div>
 

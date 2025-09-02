@@ -2,7 +2,7 @@
 import { CartRepository } from "../repositories/cart.repo";
 import { ProductService } from "./product.service";
 import { createError } from "../middlewares/error.middleware";
-import { prisma } from "../../../prisma";
+import { prisma } from "../prisma";
 
 /**
  * CartService - handles cart operations. Methods throw on invalid input
@@ -21,7 +21,10 @@ export class CartService {
       throw createError("User ID or session ID required", 400);
     }
 
-    const cartItems = await this.cartRepository.findByUserOrSession(userId, sessionId);
+    const cartItems = await this.cartRepository.findByUserOrSession(
+      userId,
+      sessionId
+    );
 
     const total = cartItems.reduce((sum, item) => {
       return sum + Number(item.priceSnapshot) * item.quantity;
@@ -38,13 +41,14 @@ export class CartService {
    * Add a product to cart. If item exists, increments quantity.
    * Returns the created/updated cart item.
    */
-  async addToCart(data: {
-    userId?: string;
-    sessionId?: string;
-    productId: string;
-    quantity: number;
-  },
-  tx?: any
+  async addToCart(
+    data: {
+      userId?: string;
+      sessionId?: string;
+      productId: string;
+      quantity: number;
+    },
+    tx?: any
   ) {
     const { userId, sessionId, productId, quantity } = data;
 
@@ -78,16 +82,22 @@ export class CartService {
     if (existingItem) {
       // Update quantity
       const newQuantity = existingItem.quantity + quantity;
-      return await this.cartRepository.updateQuantity(existingItem.id, newQuantity, tx);
+      return await this.cartRepository.updateQuantity(
+        existingItem.id,
+        newQuantity,
+        tx
+      );
     } else {
       // Create new cart item
-      return await this.cartRepository.create({
-        userId,
-        sessionId,
-        productId,
-        quantity,
-        priceSnapshot: Number(product.salePrice ?? product.price ?? 0),
-      }, tx
+      return await this.cartRepository.create(
+        {
+          userId,
+          sessionId,
+          productId,
+          quantity,
+          priceSnapshot: Number(product.salePrice ?? product.price ?? 0),
+        },
+        tx
       );
     }
   }
